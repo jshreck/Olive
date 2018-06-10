@@ -6,7 +6,7 @@ var mongoose = require("mongoose");
 // Require all models
 var db = require("./models");
 
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 //set up server
 var app = express();
@@ -41,6 +41,6 @@ mongoose.connect(MONGODB_URI);
 
 
 // Start the server
-app.listen(PORT, function () {
+app.listen(PORT, () => {
     console.log("App running on port " + PORT + "!");
   });
