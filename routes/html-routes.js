@@ -1,15 +1,71 @@
 var request = require('request');
 var cheerio = require("cheerio");
-
 var db = require("../models");
 
 module.exports = function (app) {
-    //login page
+
+    //main page
     app.get("/", (req, res) => {
-        res.render("index");
+        var icon;
+
+        //get everything from database and sort with newly created @ top
+        db.Article.find().sort({createdAt: -1}).exec((err, articles) => {
+
+            articles.forEach((article) => {
+                if (article.saved) {
+                    star = "star";
+                }
+                else {
+                    star = "star_border";
+                }
+
+                article.star = star;
+            });
+
+            var hbsObj = {
+                article: articles
+            };
+
+            res.render("index", hbsObj);
+        });
     });
 
 
+    //saved articles page
+    app.get("/saved", (req, res) => {
+
+        //get all saved article from db
+        db.Article.find({ saved: true }, (err, articles) => {
+
+            articles.forEach((article) => {
+                article.star = "star";
+            });
+
+            var hbsObj = {
+                article: articles
+            };
+            res.render("saved", hbsObj);
+        });
+    });
+
+    //getting note
+    app.get("/note/article/:id", (req, res) => {
+        db.Article.findOne({ _id: req.params.id })
+            .populate("note")
+            .then((article) => {
+                res.json(article);
+            })
+            .catch((err) => {
+                res.json(err);
+                console.log(err);
+            });
+    });
+
+
+
+
+
+    //scraping delish.com (cooking)
     app.get("/scrape", (req, res) => {
         request.get("https://www.delish.com/cooking/", (error, response, body) => {
             //load html into cheerio and save as $
@@ -27,19 +83,6 @@ module.exports = function (app) {
                 var category = $(element).find(".item-parent-link").text().trim();
 
 
-
-                // console.log(`${category}
-                // ${link}
-                // ${title}
-                // ${description}`);
-                //If want to distinguish based on category
-                // switch (category) {
-                //     case "Recipes":
-                //       console.log("This is a recipe");
-                //     case "Meals & Cooking":
-                //         console.log("Meals and Cooking");
-                // }
-
                 //create result object with properties I want to grab
                 var result = {
                     title: title,
@@ -48,17 +91,21 @@ module.exports = function (app) {
                     category: category,
                 }
 
-                //WANT TO CHECK AND MAKE SURE ITS NEW ARTICLE BEFORE SAVING
-                //create new Article
-                db.Article.create(result).then(article => {
-                    console.log(article);
-                }).catch(err => {
+                //Look for article with same title and update it, if it doesn't exist then add it
+                db.Article.findOneAndUpdate(
+                    { title: result.title },
+                    result,
+                    { upsert: true, new: true, runValidators: true },
+                    (err, article) => {
+                        // console.log(article);
+                    }
+                ).catch(err => {
                     return res.json(err);
-                })
+                });
             });
         });
         //for now just rendering main page
-        res.render("index");
+        res.json("Scraped articles!");
     });
 
 }

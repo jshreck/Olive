@@ -29,9 +29,10 @@ app.set("view engine", "handlebars");
 
 // Import routes and give the server access to them
 require("./routes/html-routes.js")(app);
+require("./routes/api-routes.js")(app);
 
 // If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/Olive";
 
 
 // Connect to the Mongo DB
