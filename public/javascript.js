@@ -8,7 +8,7 @@ $(document).ready(() => {
         console.log(res);
     })
 
-    //opening modal -> get note for article
+    //opening modal -> get note for article (if exists)
     $(document).on("click", ".modal-trigger", (clicked) => {
 
         var id = $(clicked.currentTarget).data("id");
@@ -23,10 +23,14 @@ $(document).ready(() => {
         }).then((response) => {
             console.log("response = " + JSON.stringify(response));
             
-            //iauto inserts article name as title (if none found) and then replaces title if found and gives body
+            //auto inserts article name as title (if none found) and then replaces title if found and gives body
             $("#note-title").val(response.title);
             $("#note-title").val(response.note.title);
             $("#note-body").val(response.note.body);
+            //pass note to erase button for clearing/deleting
+            var noteID = response.note._id;
+            console.log(noteID);
+            $("#erase").attr("data-noteid", `${noteID}`);
         });
     });
 
@@ -50,6 +54,23 @@ $(document).ready(() => {
 
     });
 
+    //erasing notes (deletes note)
+    $(document).on("click", "#erase", (clicked) => {
+
+        var noteID = $(clicked.currentTarget).data("noteid");
+
+        $.ajax({
+            url: `/api/delete/note/${noteID}`,
+            type: "POST",
+        }).then((response) => {
+            console.log("response = " + JSON.stringify(response)); 
+            //if no note, no noteID is captured and error returned
+            $("#note-title").val("");
+            $("#note-body").val("");
+        });
+
+    });
+
     //saving article
     $(document).on("click", ".update-save", (clicked) => {
 
@@ -62,7 +83,7 @@ $(document).ready(() => {
             dataType: "json",
             data: { saved: saved }
         }).then((response) => {
-            //clear current start and then update it with what it should look like (based on server response)
+            //clear current star and then update it with what it should look like (based on server response)
             console.log("response = " + response.saved);
             $(`.update-save[data-id=${response._id}] i`).empty();
 

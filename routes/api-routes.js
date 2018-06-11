@@ -5,6 +5,7 @@ var db = require("../models");
 
 module.exports = function (app) {
 
+    //creating/updating note
     app.post("/api/article/:id", (req, res) => {
         console.log(req.body);
 
@@ -23,6 +24,16 @@ module.exports = function (app) {
             });
     });
 
+    // deleting/erasing note 
+    app.post("/api/delete/note/:id", (req, res) => {
+        //deleting note document
+        db.Note.findOneAndRemove({ _id: req.params.id })
+            .then((response) => {
+                res.json(response);
+            }).catch(function (err) {
+                res.json(err);
+            });
+    });
 
     //updating the value for "saved"
     app.put(`/api/updateSave/:id`, (req, res) => {

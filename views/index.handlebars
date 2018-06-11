@@ -1,16 +1,25 @@
-
 <div class="container">
-  <ul class="collection">
-  {{#each article}}
-  <li class="collection-item avatar">
-      <i class="material-icons circle light-green darken-3">restaurant</i>
-      <span class="title">{{title}}</span>
-      <p>{{description}} <br>
-        <a href="{{link}}">Link</a>
-      </p>
-      <a href="#!" class="secondary-content update-save" data-id="{{id}}" data-saved={{saved}}><i class="material-icons icon-olive-green">{{star}}</i></a>
-      <a class="waves-effect waves-light btn modal-trigger" data-id="{{id}}" href="#modal1">Modal</a>
-    </li>
-  {{/each}}
-  </ul>
-</div>  
+  <div class="row">
+    <div class="col s12">
+      <div class="row">
+        <ul class="collection">
+          {{#each article}}
+          <li class="collection-item avatar" data-id="{{id}}">
+            <i class="material-icons circle icon-olive-green">{{avatar}}</i>
+            <span class="title"><h5><strong>{{title}}</strong></h5></span>
+            <p class="description"><em>{{description}}</em>
+              <br>
+              <br>
+              <a class="waves-effect btn article-button" href="{{link}}" target="_blank">Link</a>
+               <a class="waves-effect btn article-button modal-trigger" data-id="{{id}}" href="#modal1">Note</a>
+            </p>
+            <a href="#!" class="secondary-content update-save" data-id={{id}} data-saved={{saved}}>
+              <i class="material-icons icon-olive-green">{{star}}</i>
+            </a>
+          </li>
+          {{/each}}
+      </div>
+    </div>
+    </ul>
+  </div>
+</div>

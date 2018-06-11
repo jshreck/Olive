@@ -19,7 +19,16 @@ module.exports = function (app) {
                     star = "star_border";
                 }
 
+
+                if(article.category === "Recipes") {
+                    avatar = "restaurant"
+                }
+                else {
+                    avatar= "restaurant_menu"
+                }
+                
                 article.star = star;
+                article.avatar = avatar;
             });
 
             var hbsObj = {
@@ -38,13 +47,22 @@ module.exports = function (app) {
         db.Article.find({ saved: true }, (err, articles) => {
 
             articles.forEach((article) => {
+                
+                if(article.category === "Recipes") {
+                    avatar = "restaurant"
+                }
+                else {
+                    avatar= "restaurant_menu"
+                }
+                
                 article.star = "star";
+                article.avatar = avatar;
             });
 
             var hbsObj = {
                 article: articles
             };
-            res.render("saved", hbsObj);
+            res.render("index", hbsObj);
         });
     });
 
@@ -63,8 +81,6 @@ module.exports = function (app) {
 
 
 
-
-
     //scraping delish.com (cooking)
     app.get("/scrape", (req, res) => {
         request.get("https://www.delish.com/cooking/", (error, response, body) => {
@@ -72,16 +88,13 @@ module.exports = function (app) {
             var $ = cheerio.load(body);
             $(".full-item").each((i, element) => {
 
-                //can replace element with this
-
                 var title = $(element).find(".full-item-title").text().trim();
 
                 var description = $(element).find(".full-item-dek p").text().trim();
 
-                var link = "https://www.delish.com" + $(element).find(".full-item-title").attr("href");
+                var link = "https://www.delish.com" + $(element).find(".full-item-title").attr("href").trim();
 
                 var category = $(element).find(".item-parent-link").text().trim();
-
 
                 //create result object with properties I want to grab
                 var result = {
@@ -93,9 +106,9 @@ module.exports = function (app) {
 
                 //Look for article with same title and update it, if it doesn't exist then add it
                 db.Article.findOneAndUpdate(
-                    { title: result.title },
+                    {title: result.title},
                     result,
-                    { upsert: true, new: true, runValidators: true },
+                    {upsert: true, new: true, runValidators: true},
                     (err, article) => {
                         // console.log(article);
                     }
@@ -104,7 +117,6 @@ module.exports = function (app) {
                 });
             });
         });
-        //for now just rendering main page
         res.json("Scraped articles!");
     });
 

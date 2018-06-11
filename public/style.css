@@ -1,20 +1,106 @@
 body {
-    background-image: url("./images/olives.jpg");
-    background-position: center;
+    background: #26421C;
 }
+
+.main {
+    background-image: url("./images/olives.jpg");
+    background-position: center top;
+}
+
+/* HEADER */
+#circle {
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    font-size: 150px;
+    color: white;
+    line-height: 400px;
+    text-align: center;
+    background: #26421C;
+    background-image: url("./images/olive-on-stick.png");
+    background-position: center;
+
+    background-size: 40% auto;
+    background-repeat: no-repeat;
+    position: relative;
+    left: 50%;
+    margin: 0 0 0 -200px;
+  }
+
+header{
+    background-color: olivedrab;
+    color: white;
+    border-radius: 10px;
+}
+
+.header-btn {
+    color: white;
+    margin: 20px;
+    background-color: #26421C;
+    border-radius: 5px;
+}
+
+.header-btn:hover {
+    background-color: #26421C;
+    color: olivedrab;
+}
+
+/* COLLECTION/ARTICLES */
 
 .collection {
-    opacity: 0.8;
+    border-radius: 10px;
+    opacity: 0.85;
 }
 
-nav {
+.collection .collection-item.avatar i.circle {
     background-color: olivedrab;
 }
 
-.icon-unclicked {
-    color: olivedrab;
-    opacity: 0.2;
-}
 .icon-olive-green {
-    color: olivedrab;
+    color:olivedrab;
 }
+
+.title, .description {
+    color: #26421C;
+    margin-right: 2px;
+}
+
+.article-button {
+    color: white;
+    margin: 10px;
+    background-color: olivedrab;
+    border-radius: 5px;
+}
+
+.article-button:hover {
+    background-color: #26421C;
+}
+
+/* MODAL */
+
+textarea {
+    border: 1px solid olivedrab;
+    border-radius: 5px;
+    color: #26421C;
+    min-height: 100px;
+}
+
+textarea:focus {
+    outline: olivedrab;
+    border-radius: 5px;
+}
+
+input {
+    color: #26421C;
+}
+
+.input-field input {
+    border-bottom: 1px solid olivedrab !important;
+}
+
+.input-field input:focus {
+    border-bottom: 1px solid olivedrab !important;
+    box-shadow: 0 1px 0 0 olivedrab !important;
+}
+
+
